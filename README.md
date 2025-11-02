@@ -35,18 +35,27 @@ This project is the result: a practical tool born from a real-world need.
 
 ### Architectural Highlights
 
-This project is a testament to first-principles engineering. Two components are of particular technical interest:
+This project, while small, is a case study in pragmatic, first-principles engineering to solve real-world data challenges.
 
-1.  **Recursive, Programmatic UI Generation:** Instead of using a standard `TreeView` control, the entire hierarchical display is built dynamically in code. The `PopulateTree` function recursively nests `Grid` controls to construct the UI. This low-level approach provided granular control over the layout and enabled the implementation of highly specific, context-aware user interactions (like the different click behaviors for keys, values, and headers).
++ **Custom Binary Parser:** Lacking a C# library for the .safetensors format, the application's core is a custom parser written from scratch. It reads the 8-byte file header to determine the metadata length and then extracts the raw UTF-8 JSON payload for processing.
 
-2.  **Custom Binary Parser & Deserializer:** The core of the application is its ability to read the `.safetensors` format natively. This was achieved by writing a custom parser that reads the 8-byte header to determine the metadata length, extracts the raw UTF-8 payload, and then runs a series of sanitization routines to correct malformed JSON before deserializing it into a structured object model for display.
++ **Recursive JSON Expansion Engine:** The metadata in .safetensors files is often a complex, multi-level structure where nested JSON objects and arrays are themselves encoded as strings. To handle this, a custom, recursive parsing engine was developed. It uses System.Text.Json's JsonDocument model to:
+
+    - Parse the initial JSON payload into a JsonElement tree.
+
+    - Intelligently walk the tree, identifying JsonElements of type String that are themselves valid JSON documents.
+
+    - Recursively parse these nested documents, correctly handling both objects and arrays found within strings.
+
+    - The final result is a clean, fully-hydrated, and native Dictionary<string, object> that represents the complete, deeply-nested structure of the metadata.
+
++ **Programmatic UI Generation:** To achieve the specific, multi-column hierarchical layout required, the entire data grid is built dynamically in C# code-behind. A recursive PopulateTree function programmatically creates and nests Grid controls, providing the granular, low-level control necessary to implement the context-aware sorting and click-to-copy interactions.
 
 ---
 
 ### Technology Stack & Project Status
 
-*   **Framework:** C# with Windows Presentation Foundation (WPF) on the .NET 4.0 Framework.
-*   **Development Environment:** Visual Studio 2010.
+*   **Framework:** C# with Windows Presentation Foundation (WPF) on .NET 8.0.
+*   **Development Environment:** Visual Studio 2022.
 *   **Status:** This is a functional and polished personal project.
 
-**A Note on the Technology:** This project was developed on an older machine, and as such, it uses an older version of the .NET Framework. The value of this project lies in its architectural patterns—a recursive UI generator, a custom binary parser, and a thoughtful user experience—which are timeless and independent of the framework version.
