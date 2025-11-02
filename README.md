@@ -1,10 +1,10 @@
 # Safetensors Metadata Viewer for Windows (WPF)
 
-![Application Icon](https://github.com/lfaga/st-meta-view/blob/main/.github/icon.png)
+![Application Icon](https://github.com/lfaga/st-meta-view/blob/8b38c79885bb54e57bc1230646bff52d9676a420/.github/icon.png)
 
 A desktop utility for Windows, built in C# and WPF, for inspecting the metadata of `.safetensors` model files. This tool was created to provide a clear, hierarchical, and interactive view of the embedded metadata that is often complex and hard to read in a standard text editor.
 
-![Application Screenshot](https://github.com/lfaga/st-meta-view/blob/main/.github/screencap.png)
+![Application Screenshot](https://github.com/lfaga/st-meta-view/blob/8b38c79885bb54e57bc1230646bff52d9676a420/.github/screencap.png)
 
 ---
 
