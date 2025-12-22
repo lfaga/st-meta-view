@@ -1,17 +1,29 @@
 ﻿using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace st_meta_view.Logic
 {
   public class SafetensorsParser
   {
+    private readonly JsonSerializerOptions options = new()
+    {
+      Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+      WriteIndented = true
+    };
 
     public string? ReadSafetensorsMetadata(string safetensorsFullPath)
     {
       using var file = File.Open(safetensorsFullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
       using var br = new BinaryReader(file);
       var header = br.ReadBytes(8);
+
+      var firstByte = br.ReadByte();
+      if (firstByte != 123)
+        throw new Exception("Not a valid Safetensors file.");
+
+      file.Position -= 1;
       var ullength = BitConverter.ToUInt64(header, 0);
       if (ullength > int.MaxValue)
         throw new Exception(string.Format("Error: The metadata is too long, longer than {0}.", int.MaxValue));
@@ -102,11 +114,12 @@ namespace st_meta_view.Logic
       return returnDict;
     }
 
-    public bool WriteMetadataToJsonFile(string metadataFullPath, string metadataString)
+    public bool WriteMetadataToJsonFile(string metadataFullPath, Dictionary<string, object?> metadata)
     {
       var fileOutPath = metadataFullPath + ".json";
       if (!File.Exists(fileOutPath))
       {
+        string metadataString = JsonSerializer.Serialize(metadata, options);
         using var fileout = File.OpenWrite(fileOutPath);
         using var sw = new StreamWriter(fileout, Encoding.UTF8);
         sw.Write(metadataString);

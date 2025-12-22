@@ -38,36 +38,36 @@ namespace st_meta_view
 
       if (metadataString is not null)
       {
-        if (isDump)
+        var metadata = s.JsonStringToDictionary(metadataString);
+        if (metadata is not null)
         {
-          try
+          if (isDump)
           {
-            if (!s.WriteMetadataToJsonFile(path, metadataString))
+            try
             {
-              MessageBox.Show(string.Format("{0}.json already exists.", path),
+              if (!s.WriteMetadataToJsonFile(path, metadata))
+              {
+                MessageBox.Show(string.Format("{0}.json already exists.", path),
+                  "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+              }
+            }
+            catch (Exception ex)
+            {
+              MessageBox.Show(string.Format("An error ocurred writing the file.\n{0}", ex.Message),
                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
           }
-          catch (Exception ex)
-          {
-            MessageBox.Show(string.Format("An error ocurred writing the file.\n{0}", ex.Message),
-              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-          }
-        }
-        else
-        {
-          var metadata = s.JsonStringToDictionary(metadataString);
-          if (metadata is not null)
+          else
           {
             var w = new MainWindow();
             w.LoadMetadata(path, metadata);
             w.ShowDialog();
           }
-          else
-          {
-            MessageBox.Show("The metadata in the file is malformed or corrupted.", "Metadata Viewer",
-              MessageBoxButton.OK, MessageBoxImage.Error);
-          }
+        }
+        else
+        {
+          MessageBox.Show("The metadata in the file is malformed or corrupted.", "Metadata Viewer",
+            MessageBoxButton.OK, MessageBoxImage.Error);
         }
       }
       else
