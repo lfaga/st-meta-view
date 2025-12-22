@@ -12,11 +12,6 @@ namespace st_meta_view
     {
       base.OnStartup(e);
 
-#if DEBUG
-      //for now and to test, the arguments are hardcoded
-      var path = @"E:\Tools\AI\LoRAs\SD1.5\Borg_Drone_v1\BorgDrone.safetensors";
-      var isDump = false;
-#else
       string path;
       var isDump = false;
 
@@ -37,7 +32,6 @@ namespace st_meta_view
         Shutdown();
         return;
       }
-#endif
 
       var s = new SafetensorsParser();
       var metadataString = s.ReadSafetensorsMetadata(path);

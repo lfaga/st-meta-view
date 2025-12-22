@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\app-icon.ico</ApplicationIcon>
+    <StartupObject>st_meta_view.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "st-meta-view": {
+      "commandName": "Project",
+      "commandLineArgs": "E:\\Tools\\AI\\LoRAs\\Flux.1\\Flux.1-Dev\\styles\\flux-wet-look\\flux_wet_look_lora_v1.safetensors"
+    }
+  }
+}
