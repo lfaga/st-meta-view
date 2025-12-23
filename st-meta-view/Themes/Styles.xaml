@@ -50,6 +50,11 @@
     <Setter Property="FontFamily" Value="Arial" />
   </Style>
 
+  <Style TargetType="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="MaxWidth" Value="420" />
+  </Style>
+
   <!-- Default TextBox Stlye -->
   <Style TargetType="TextBox">
     <Setter Property="Background" Value="{StaticResource GradientDarkBrush}" />
@@ -61,19 +66,24 @@
 
   <!-- Default Label Style -->
   <Style TargetType="Label">
-    <Setter Property="Margin" Value="1" />
+    <Setter Property="Margin" Value="0" />
     <Setter Property="FontSize" Value="13" />
     <Setter Property="Foreground" Value="{StaticResource LightBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource DarkBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
   </Style>
 
   <Style x:Key="ClickableLabelStyle" TargetType="Label">
-    <Setter Property="Margin" Value="1" />
+    <Setter Property="Margin" Value="0" />
     <Setter Property="FontSize" Value="13" />
     <Setter Property="Foreground" Value="{StaticResource LightBrush}" />
     <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="BorderBrush" Value="{StaticResource DarkBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
     <Style.Triggers>
       <Trigger Property="IsMouseOver" Value="true">
         <Setter Property="Foreground" Value="{StaticResource HighlightBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LightBrush}" />
       </Trigger>
     </Style.Triggers>
   </Style>

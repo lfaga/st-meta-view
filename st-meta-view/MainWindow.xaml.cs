@@ -1,4 +1,5 @@
-﻿using st_meta_view.Properties;
+﻿using st_meta_view.Logic;
+using st_meta_view.Properties;
 using System.ComponentModel;
 using System.Text;
 using System.Windows;
@@ -22,6 +23,8 @@ namespace st_meta_view
     public void LoadMetadata(string filename, Dictionary<string, object?> metadata)
     {
       LblFilename.Content = filename;
+
+      RootGrid.Tag = metadata;
 
       foreach (var element in metadata)
       {
@@ -58,7 +61,7 @@ namespace st_meta_view
 
       var d = element.Value as Dictionary<string, object?>;
 
-      var lbl1 = new Label { Content = string.Format("{0}: ", element.Key), FontSize = lfsize };
+      var lbl1 = new Label { Content = new TextBlock { Text = element.Key }, FontSize = lfsize };
       parentGrid.Children.Add(lbl1);
       Grid.SetColumn(lbl1, 0);
       Grid.SetRow(lbl1, parentGrid.RowDefinitions.Count - 1);
@@ -106,7 +109,7 @@ namespace st_meta_view
           ClearStatusBarDelayed();
         };
 
-        var lbl2 = new Label { Content = val, FontSize = lfsize };
+        var lbl2 = new Label { Content = new TextBlock { Text = val }, FontSize = lfsize };
         parentGrid.Children.Add(lbl2);
         Grid.SetColumn(lbl2, 1);
         Grid.SetRow(lbl2, parentGrid.RowDefinitions.Count - 1);
@@ -125,16 +128,12 @@ namespace st_meta_view
           if (!lblSender.Equals(_lastSortClicked) || _lastSortOrder == "D")
           {
             _lastSortOrder = "A";
-            sortedData = from pair in tmpDic
-                         orderby pair.Value is Dictionary<string, object?> ? 1 : 0, pair.Key
-                         select pair;
+            sortedData = tmpDic.OrderBy(kvp => kvp.Key, new AdaptiveComparer());
           }
           else
           {
             _lastSortOrder = "D";
-            sortedData = from pair in tmpDic
-                         orderby pair.Value is Dictionary<string, object?> ? 1 : 0, pair.Key descending
-                         select pair;
+            sortedData = tmpDic.OrderByDescending(kvp => kvp.Key, new AdaptiveComparer());
           }
         }
         else //"Value"
@@ -142,16 +141,12 @@ namespace st_meta_view
           if (!lblSender.Equals(_lastSortClicked) || _lastSortOrder == "D")
           {
             _lastSortOrder = "A";
-            sortedData = from pair in tmpDic
-                         orderby pair.Value is Dictionary<string, object?> ? 1 : 0, pair.Value.ToString()
-                         select pair;
+            sortedData = tmpDic.OrderBy(kvp => kvp.Value, new AdaptiveComparer());
           }
           else
           {
             _lastSortOrder = "D";
-            sortedData = from pair in tmpDic
-                         orderby pair.Value is Dictionary<string, object?> ? 1 : 0, pair.Value.ToString() descending
-                         select pair;
+            sortedData = tmpDic.OrderByDescending(kvp => kvp.Value, new AdaptiveComparer());
           }
         }
 

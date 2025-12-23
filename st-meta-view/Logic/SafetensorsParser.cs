@@ -49,33 +49,39 @@ namespace st_meta_view.Logic
 
       var metadata = ExpandElement(jsonDoc.RootElement, "metadata");
 
-      return metadata;
+      if (metadata is Dictionary<string, object?> mDict)
+      {
+        return mDict;
+      }
+
+      return null;
     }
 
-    private Dictionary<string, object?> ExpandElement(JsonElement element, string key)
+    private object? ExpandElement(JsonElement element, string key)
     {
-      var returnDict = new Dictionary<string, object?>();
 
       switch (element.ValueKind)
       {
         case JsonValueKind.Object:
 
+          var returnDict = new Dictionary<string, object?>();
           foreach (JsonProperty property in element.EnumerateObject())
           {
             returnDict.Add(property.Name, ExpandElement(property.Value, property.Name));
           }
-          break;
+          return returnDict;
 
         case JsonValueKind.Array:
 
           int idx = 0;
 
+          var returnArray = new Dictionary<string, object?>();
           foreach (JsonElement item in element.EnumerateArray())
           {
             var nk = string.Format("{0}-{1}", key, ++idx);
-            returnDict.Add(nk, ExpandElement(item, nk));
+            returnArray.Add(nk, ExpandElement(item, nk));
           }
-          break;
+          return returnArray;
 
         case JsonValueKind.String:
 
@@ -83,35 +89,30 @@ namespace st_meta_view.Logic
           {
             using (var doc = JsonDocument.Parse(element.GetString()!))
             {
-              returnDict = ExpandElement(doc.RootElement, key);
+              return ExpandElement(doc.RootElement, key);
             }
           }
           catch
           {
-            returnDict.Add(key, element.GetString());
+            return element.GetString();
           }
-          break;
 
         case JsonValueKind.Number:
-          returnDict.Add(key, element.GetDouble());
-          break;
+          return element.GetDouble();
 
         case JsonValueKind.True:
-          returnDict.Add(key, true);
-          break;
+          return true;
+
         case JsonValueKind.False:
-          returnDict.Add(key, false);
-          break;
+          return false;
+
         case JsonValueKind.Null:
         case JsonValueKind.Undefined:
-          returnDict.Add(key, null);
-          break;
-        default:
-          returnDict.Add(key, element.GetRawText());
-          break;
-      }
+          return null;
 
-      return returnDict;
+        default:
+          return element.GetRawText();
+      }
     }
 
     public bool WriteMetadataToJsonFile(string metadataFullPath, Dictionary<string, object?> metadata)
